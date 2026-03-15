@@ -4,9 +4,47 @@ Production-ready Codex Desktop skill for extracting a reusable visual system fro
 
 ## Overview
 
+This repository is itself an installable Codex Skill. The root already contains `SKILL.md`, `agents/`, `references/`, `scripts/`, and `assets/` in the same overall shape as built-in Codex Desktop skills.
+
 The skill inspects the rendered interface rather than relying only on source CSS. It works with hydrated DOM, computed styles, CSS custom properties, theme switches, inline styles, runtime class toggles, responsive behavior, and safe interactive states such as `hover`, `focus`, and `active`.
 
 The result is optimized for Figma-first workflows and is suitable for Tokens Studio, Figma Variables, design audits, and design-system reconstruction without copying product logic or content.
+
+## Install from GitHub
+
+Download the ready-to-install bundle from GitHub Releases:
+
+```text
+https://github.com/ppl636gpt/codex-site-visual-system-extractor/releases/latest/download/skill.zip
+```
+
+Install it into Codex Desktop:
+
+```bash
+mkdir -p "$CODEX_HOME/skills"
+curl -L https://github.com/ppl636gpt/codex-site-visual-system-extractor/releases/latest/download/skill.zip -o skill.zip
+unzip skill.zip -d "$CODEX_HOME/skills"
+```
+
+If you prefer Git instead of release assets:
+
+```bash
+git clone https://github.com/ppl636gpt/codex-site-visual-system-extractor.git "$CODEX_HOME/skills/site-visual-system-extractor"
+```
+
+## Install dependencies
+
+```bash
+cd "$CODEX_HOME/skills/site-visual-system-extractor"
+python3 -m pip install -r scripts/requirements.txt
+python3 -m playwright install chromium
+```
+
+Invoke the skill with:
+
+```text
+$site-visual-system-extractor
+```
 
 ## What it extracts
 
@@ -20,21 +58,6 @@ The result is optimized for Figma-first workflows and is suitable for Tokens Stu
 - It does not reconstruct business logic.
 - It does not copy page text or user data.
 - It does not rebuild the source site as a working app clone.
-
-## Install in Codex Desktop
-
-```bash
-cp -R site-visual-system-extractor "$CODEX_HOME/skills/"
-cd "$CODEX_HOME/skills/site-visual-system-extractor"
-python3 -m pip install -r scripts/requirements.txt
-python3 -m playwright install chromium
-```
-
-Invoke the skill with:
-
-```text
-$site-visual-system-extractor
-```
 
 ## Typical usage
 
@@ -65,13 +88,10 @@ python3 scripts/build_figma_mapping.py --inspection ./output/raw/inspection.raw.
 - Inputs: `--source` accepts a remote URL, a local static site directory, or a local HTML file. You can repeat `--page`, `--theme`, `--viewport`, and `--state` to widen coverage.
 - Outputs: `tokens.foundation.json`, `tokens.semantic.json`, `tokens.components.json`, `tokens.themes.json`, `figma-mapping.json`, `components-summary.md`, and `design-audit.md`.
 
-## Recommended workflow
-
-Start with 3-8 representative pages, include both light and dark themes when they exist, keep at least one desktop and one mobile viewport, then review `design-audit.md` before refining token groups or rerunning extraction with a narrower scope.
-
 ## Repository layout
 
-- Root repository README: `README.md`
-- Standalone skill bundle: [`site-visual-system-extractor`](./site-visual-system-extractor)
-- Skill specification: [`site-visual-system-extractor/SKILL.md`](./site-visual-system-extractor/SKILL.md)
-- Standalone bundle README: [`site-visual-system-extractor/README.md`](./site-visual-system-extractor/README.md)
+- Root skill definition: [`SKILL.md`](./SKILL.md)
+- UI metadata: [`agents/openai.yaml`](./agents/openai.yaml)
+- Script entrypoint: [`scripts/extract_site_tokens.py`](./scripts/extract_site_tokens.py)
+- Bundle packager: [`scripts/package_skill_bundle.py`](./scripts/package_skill_bundle.py)
+- Russian-only file: [`README.ru.md`](./README.ru.md)

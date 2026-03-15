@@ -7,6 +7,7 @@
 [![Python](https://img.shields.io/badge/Python-3.x-3776AB?logo=python&logoColor=white)](https://www.python.org/)
 [![Playwright](https://img.shields.io/badge/Playwright-Chromium-2EAD33?logo=playwright&logoColor=white)](https://playwright.dev/)
 [![Figma Workflow](https://img.shields.io/badge/Figma-Token%20Workflow-F24E1E?logo=figma&logoColor=white)](https://www.figma.com/)
+[![Install Skill](https://img.shields.io/badge/Download-skill.zip-111827)](https://github.com/ppl636gpt/codex-site-visual-system-extractor/releases/latest/download/skill.zip)
 
 [English](#english) | [Русский](#russian)
 
@@ -18,9 +19,47 @@ Production-ready Codex Desktop skill for extracting a reusable visual system fro
 
 ### Overview
 
+This repository is itself an installable Codex Skill. The root already contains `SKILL.md`, `agents/`, `references/`, `scripts/`, and `assets/` in the same overall shape as built-in Codex Desktop skills.
+
 The skill inspects the rendered interface rather than relying only on source CSS. It works with hydrated DOM, computed styles, CSS custom properties, theme switches, inline styles, runtime class toggles, responsive behavior, and safe interactive states such as `hover`, `focus`, and `active`.
 
 The result is optimized for Figma-first workflows and is suitable for Tokens Studio, Figma Variables, design audits, and design-system reconstruction without copying product logic or content.
+
+### Install from GitHub
+
+Download the ready-to-install bundle from GitHub Releases:
+
+```text
+https://github.com/ppl636gpt/codex-site-visual-system-extractor/releases/latest/download/skill.zip
+```
+
+Install it into Codex Desktop:
+
+```bash
+mkdir -p "$CODEX_HOME/skills"
+curl -L https://github.com/ppl636gpt/codex-site-visual-system-extractor/releases/latest/download/skill.zip -o skill.zip
+unzip skill.zip -d "$CODEX_HOME/skills"
+```
+
+If you prefer Git instead of release assets:
+
+```bash
+git clone https://github.com/ppl636gpt/codex-site-visual-system-extractor.git "$CODEX_HOME/skills/site-visual-system-extractor"
+```
+
+### Install dependencies
+
+```bash
+cd "$CODEX_HOME/skills/site-visual-system-extractor"
+python3 -m pip install -r scripts/requirements.txt
+python3 -m playwright install chromium
+```
+
+Invoke the skill with:
+
+```text
+$site-visual-system-extractor
+```
 
 ### What it extracts
 
@@ -35,24 +74,7 @@ The result is optimized for Figma-first workflows and is suitable for Tokens Stu
 - It does not copy page text or user data.
 - It does not rebuild the source site as a working app clone.
 
-### Install in Codex Desktop
-
-```bash
-cp -R site-visual-system-extractor "$CODEX_HOME/skills/"
-cd "$CODEX_HOME/skills/site-visual-system-extractor"
-python3 -m pip install -r scripts/requirements.txt
-python3 -m playwright install chromium
-```
-
-Invoke the skill with:
-
-```text
-$site-visual-system-extractor
-```
-
 ### Typical usage
-
-Run the full pipeline when you want rendered inspection, token normalization, Figma mapping, and audit reports in one pass:
 
 ```bash
 python3 scripts/extract_site_tokens.py \
@@ -66,28 +88,17 @@ python3 scripts/extract_site_tokens.py \
   --output ./output/example-site
 ```
 
-Use the modular scripts when you want to inspect first and export later:
-
-```bash
-python3 scripts/inspect_rendered_ui.py --source https://example.com --page / --theme auto --output ./output/raw
-python3 scripts/normalize_tokens.py --inspection ./output/raw/inspection.raw.json --output ./output/normalized
-python3 scripts/build_figma_mapping.py --inspection ./output/raw/inspection.raw.json --tokens-dir ./output/normalized --output ./output/normalized
-```
-
 ### Inputs and outputs
 
-- Inputs: `--source` accepts a remote URL, a local static site directory, or a local HTML file. You can repeat `--page`, `--theme`, `--viewport`, and `--state` to widen coverage.
+- Inputs: `--source` accepts a remote URL, a local static site directory, or a local HTML file. You can repeat `--page`, `--theme`, `--viewport`, and `--state`.
 - Outputs: `tokens.foundation.json`, `tokens.semantic.json`, `tokens.components.json`, `tokens.themes.json`, `figma-mapping.json`, `components-summary.md`, and `design-audit.md`.
-
-### Recommended workflow
-
-Start with 3-8 representative pages, include both light and dark themes when they exist, keep at least one desktop and one mobile viewport, then review `design-audit.md` before refining token groups or rerunning extraction with a narrower scope.
 
 ### Repository layout
 
-- Standalone skill bundle: [`site-visual-system-extractor`](./site-visual-system-extractor)
-- Skill specification: [`site-visual-system-extractor/SKILL.md`](./site-visual-system-extractor/SKILL.md)
-- Standalone bundle README: [`site-visual-system-extractor/README.md`](./site-visual-system-extractor/README.md)
+- Root skill definition: [`SKILL.md`](./SKILL.md)
+- UI metadata: [`agents/openai.yaml`](./agents/openai.yaml)
+- Script entrypoint: [`scripts/extract_site_tokens.py`](./scripts/extract_site_tokens.py)
+- Bundle packager: [`scripts/package_skill_bundle.py`](./scripts/package_skill_bundle.py)
 - English-only file: [`README.en.md`](./README.en.md)
 - Russian-only file: [`README.ru.md`](./README.ru.md)
 
@@ -99,9 +110,47 @@ Production-ready skill для Codex Desktop, который извлекает �
 
 ### Обзор
 
+Этот репозиторий сам является устанавливаемым Codex Skill. В корне уже лежат `SKILL.md`, `agents/`, `references/`, `scripts/` и `assets/` в той же общей форме, что и у встроенных skill для Codex Desktop.
+
 Skill анализирует именно отрендеренный интерфейс, а не только исходные CSS-файлы. Он учитывает hydrated DOM, computed styles, CSS custom properties, переключение тем, inline styles, runtime class toggles, responsive-поведение и безопасные интерактивные состояния вроде `hover`, `focus` и `active`.
 
 Результат ориентирован на Figma-first workflow и подходит для Tokens Studio, Figma Variables, дизайн-аудита и восстановления дизайн-системы без копирования контента и логики продукта.
+
+### Установка из GitHub
+
+Готовый installable bundle можно скачать из GitHub Releases:
+
+```text
+https://github.com/ppl636gpt/codex-site-visual-system-extractor/releases/latest/download/skill.zip
+```
+
+Установка в Codex Desktop:
+
+```bash
+mkdir -p "$CODEX_HOME/skills"
+curl -L https://github.com/ppl636gpt/codex-site-visual-system-extractor/releases/latest/download/skill.zip -o skill.zip
+unzip skill.zip -d "$CODEX_HOME/skills"
+```
+
+Если удобнее ставить через Git, а не через release asset:
+
+```bash
+git clone https://github.com/ppl636gpt/codex-site-visual-system-extractor.git "$CODEX_HOME/skills/site-visual-system-extractor"
+```
+
+### Установка зависимостей
+
+```bash
+cd "$CODEX_HOME/skills/site-visual-system-extractor"
+python3 -m pip install -r scripts/requirements.txt
+python3 -m playwright install chromium
+```
+
+Вызывать skill можно так:
+
+```text
+$site-visual-system-extractor
+```
 
 ### Что извлекается
 
@@ -116,24 +165,7 @@ Skill анализирует именно отрендеренный интер�
 - Не копирует тексты страниц и пользовательские данные.
 - Не собирает рабочий клон исходного сайта.
 
-### Установка в Codex Desktop
-
-```bash
-cp -R site-visual-system-extractor "$CODEX_HOME/skills/"
-cd "$CODEX_HOME/skills/site-visual-system-extractor"
-python3 -m pip install -r scripts/requirements.txt
-python3 -m playwright install chromium
-```
-
-Вызывать skill можно так:
-
-```text
-$site-visual-system-extractor
-```
-
 ### Типовой запуск
-
-Полный pipeline стоит запускать, когда нужен rendered inspection, нормализация токенов, Figma mapping и audit reports за один проход:
 
 ```bash
 python3 scripts/extract_site_tokens.py \
@@ -147,27 +179,16 @@ python3 scripts/extract_site_tokens.py \
   --output ./output/example-site
 ```
 
-Если нужен поэтапный запуск, используй модульные скрипты:
-
-```bash
-python3 scripts/inspect_rendered_ui.py --source https://example.com --page / --theme auto --output ./output/raw
-python3 scripts/normalize_tokens.py --inspection ./output/raw/inspection.raw.json --output ./output/normalized
-python3 scripts/build_figma_mapping.py --inspection ./output/raw/inspection.raw.json --tokens-dir ./output/normalized --output ./output/normalized
-```
-
 ### Входы и выходы
 
 - Входы: `--source` принимает URL, локальную папку со статическим сайтом или локальный HTML-файл. Для расширения охвата можно повторять `--page`, `--theme`, `--viewport` и `--state`.
 - Выходы: `tokens.foundation.json`, `tokens.semantic.json`, `tokens.components.json`, `tokens.themes.json`, `figma-mapping.json`, `components-summary.md` и `design-audit.md`.
 
-### Рекомендуемый workflow
-
-Начни с 3-8 репрезентативных страниц, при наличии тем проверь и `light`, и `dark`, сохрани хотя бы один desktop и один mobile viewport, а затем сначала открой `design-audit.md` и уже после этого уточняй token grouping или повторяй extraction с более узким scope.
-
 ### Структура репозитория
 
-- Standalone skill bundle: [`site-visual-system-extractor`](./site-visual-system-extractor)
-- Спецификация skill: [`site-visual-system-extractor/SKILL.md`](./site-visual-system-extractor/SKILL.md)
-- README для standalone bundle: [`site-visual-system-extractor/README.md`](./site-visual-system-extractor/README.md)
+- Корневая спецификация skill: [`SKILL.md`](./SKILL.md)
+- UI metadata: [`agents/openai.yaml`](./agents/openai.yaml)
+- Основной entrypoint скрипта: [`scripts/extract_site_tokens.py`](./scripts/extract_site_tokens.py)
+- Скрипт сборки bundle: [`scripts/package_skill_bundle.py`](./scripts/package_skill_bundle.py)
 - Английский отдельный файл: [`README.en.md`](./README.en.md)
 - Русский отдельный файл: [`README.ru.md`](./README.ru.md)
