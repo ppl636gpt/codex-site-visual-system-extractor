@@ -1,0 +1,62 @@
+<svg width="1280" height="640" viewBox="0 0 1280 640" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Codex Site Visual System Extractor</title>
+  <desc id="desc">Banner for the Codex Desktop skill that extracts visual systems and design tokens from rendered websites and web applications.</desc>
+  <defs>
+    <linearGradient id="bg" x1="52" y1="40" x2="1180" y2="620" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#061826"/>
+      <stop offset="0.45" stop-color="#0F3A4B"/>
+      <stop offset="1" stop-color="#17324F"/>
+    </linearGradient>
+    <linearGradient id="card" x1="226" y1="120" x2="1030" y2="550" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F7F5EF"/>
+      <stop offset="1" stop-color="#D7E6EA"/>
+    </linearGradient>
+    <linearGradient id="accentA" x1="1000" y1="100" x2="1220" y2="280" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F0A202"/>
+      <stop offset="1" stop-color="#D95D39"/>
+    </linearGradient>
+    <linearGradient id="accentB" x1="90" y1="430" x2="360" y2="580" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#6BCB77"/>
+      <stop offset="1" stop-color="#178F78"/>
+    </linearGradient>
+    <filter id="shadow" x="180" y="80" width="920" height="490" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+      <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+      <feOffset dy="20"/>
+      <feGaussianBlur stdDeviation="22"/>
+      <feColorMatrix type="matrix" values="0 0 0 0 0.0117647 0 0 0 0 0.0901961 0 0 0 0 0.156863 0 0 0 0.28 0"/>
+      <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_1_1"/>
+      <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_1_1" result="shape"/>
+    </filter>
+  </defs>
+  <rect width="1280" height="640" rx="36" fill="url(#bg)"/>
+  <circle cx="1106" cy="132" r="134" fill="url(#accentA)" opacity="0.88"/>
+  <circle cx="228" cy="536" r="148" fill="url(#accentB)" opacity="0.88"/>
+  <path d="M1014 0H1280V288C1214 248 1133 220 1028 212C984 209 934 214 884 232C921 154 965 78 1014 0Z" fill="#F9F4E7" opacity="0.08"/>
+  <g filter="url(#shadow)">
+    <rect x="224" y="116" width="832" height="406" rx="28" fill="url(#card)"/>
+  </g>
+  <rect x="272" y="168" width="180" height="34" rx="17" fill="#0F3A4B"/>
+  <text x="306" y="190" fill="#F7F5EF" font-family="Georgia, 'Times New Roman', serif" font-size="18" font-weight="700">Codex Desktop Skill</text>
+  <text x="272" y="260" fill="#0B1F2A" font-family="Georgia, 'Times New Roman', serif" font-size="58" font-weight="700">Site Visual System</text>
+  <text x="272" y="326" fill="#0B1F2A" font-family="Georgia, 'Times New Roman', serif" font-size="58" font-weight="700">Extractor</text>
+  <text x="272" y="380" fill="#29495A" font-family="'Trebuchet MS', Verdana, sans-serif" font-size="28">Rendered UI inspection for tokens, themes, components,</text>
+  <text x="272" y="416" fill="#29495A" font-family="'Trebuchet MS', Verdana, sans-serif" font-size="28">and Figma-friendly design-system exports.</text>
+  <g>
+    <rect x="760" y="182" width="210" height="92" rx="18" fill="#17324F"/>
+    <text x="790" y="218" fill="#F7F5EF" font-family="'Trebuchet MS', Verdana, sans-serif" font-size="20" font-weight="700">FOUNDATION</text>
+    <text x="790" y="249" fill="#D7E6EA" font-family="'Trebuchet MS', Verdana, sans-serif" font-size="16">color / spacing / type</text>
+    <text x="790" y="269" fill="#D7E6EA" font-family="'Trebuchet MS', Verdana, sans-serif" font-size="16">radius / border / shadow</text>
+  </g>
+  <g>
+    <rect x="720" y="300" width="258" height="92" rx="18" fill="#F0A202"/>
+    <text x="748" y="336" fill="#10212D" font-family="'Trebuchet MS', Verdana, sans-serif" font-size="20" font-weight="700">SEMANTIC + THEMES</text>
+    <text x="748" y="367" fill="#10212D" font-family="'Trebuchet MS', Verdana, sans-serif" font-size="16">background / surface / text</text>
+    <text x="748" y="387" fill="#10212D" font-family="'Trebuchet MS', Verdana, sans-serif" font-size="16">light / dark / overrides</text>
+  </g>
+  <g>
+    <rect x="782" y="418" width="188" height="74" rx="18" fill="#6BCB77"/>
+    <text x="812" y="450" fill="#0B1F2A" font-family="'Trebuchet MS', Verdana, sans-serif" font-size="19" font-weight="700">FIGMA OUTPUT</text>
+    <text x="812" y="476" fill="#0B1F2A" font-family="'Trebuchet MS', Verdana, sans-serif" font-size="15">variables / mapping / audit</text>
+  </g>
+</svg>

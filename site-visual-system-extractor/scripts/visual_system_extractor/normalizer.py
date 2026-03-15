@@ -648,7 +648,7 @@ def _variable_candidates(captures: list[dict[str, Any]], role: str) -> list[dict
                     {
                         "value": color,
                         "confidence": 0.94,
-                    "reason": f"Подсказка из CSS variable: {variable_name}",
+                    "reason": f"Подсказка из CSS variable / CSS variable hint: {variable_name}",
                         "trace": [{"page": capture["page"], "theme": capture["theme"], "viewport": capture["viewport"]["name"], "selector": selector, "state": "base", "component": None, "sourceVariable": variable_name}],
                     }
                 )
@@ -705,39 +705,39 @@ def _semantic_fallback(role: str, foundation: dict[str, Any], primary_value: str
         if not neutral_values:
             return None
         if role == "background.canvas":
-            return {"value": neutral_values[0], "confidence": 0.42, "trace": [], "reason": "нейтральный fallback", "observationCount": 0}
+            return {"value": neutral_values[0], "confidence": 0.42, "trace": [], "reason": "нейтральный fallback / neutral fallback", "observationCount": 0}
         if role == "surface.default":
-            return {"value": neutral_values[min(1, len(neutral_values) - 1)], "confidence": 0.4, "trace": [], "reason": "fallback для нейтральной поверхности", "observationCount": 0}
+            return {"value": neutral_values[min(1, len(neutral_values) - 1)], "confidence": 0.4, "trace": [], "reason": "fallback для нейтральной поверхности / neutral surface fallback", "observationCount": 0}
         if role == "surface.raised":
-            return {"value": neutral_values[min(2, len(neutral_values) - 1)], "confidence": 0.38, "trace": [], "reason": "fallback для поднятой поверхности", "observationCount": 0}
+            return {"value": neutral_values[min(2, len(neutral_values) - 1)], "confidence": 0.38, "trace": [], "reason": "fallback для поднятой поверхности / raised surface fallback", "observationCount": 0}
         if role == "text.default":
-            return {"value": neutral_values[-1], "confidence": 0.42, "trace": [], "reason": "fallback для основного текста", "observationCount": 0}
+            return {"value": neutral_values[-1], "confidence": 0.42, "trace": [], "reason": "fallback для основного текста / text fallback", "observationCount": 0}
         if role == "text.muted":
-            return {"value": neutral_values[max(len(neutral_values) - 3, 0)], "confidence": 0.36, "trace": [], "reason": "fallback для приглушённого текста", "observationCount": 0}
+            return {"value": neutral_values[max(len(neutral_values) - 3, 0)], "confidence": 0.36, "trace": [], "reason": "fallback для приглушённого текста / muted text fallback", "observationCount": 0}
         if role == "text.inverse":
-            return {"value": neutral_values[0], "confidence": 0.36, "trace": [], "reason": "fallback для инверсного текста", "observationCount": 0}
+            return {"value": neutral_values[0], "confidence": 0.36, "trace": [], "reason": "fallback для инверсного текста / inverse text fallback", "observationCount": 0}
         if role == "border.default":
-            return {"value": neutral_values[min(2, len(neutral_values) - 1)], "confidence": 0.34, "trace": [], "reason": "fallback для рамки", "observationCount": 0}
+            return {"value": neutral_values[min(2, len(neutral_values) - 1)], "confidence": 0.34, "trace": [], "reason": "fallback для рамки / border fallback", "observationCount": 0}
         if role == "border.subtle":
-            return {"value": neutral_values[min(1, len(neutral_values) - 1)], "confidence": 0.34, "trace": [], "reason": "fallback для слабой рамки", "observationCount": 0}
+            return {"value": neutral_values[min(1, len(neutral_values) - 1)], "confidence": 0.34, "trace": [], "reason": "fallback для слабой рамки / subtle border fallback", "observationCount": 0}
         if role == "border.strong":
-            return {"value": neutral_values[max(len(neutral_values) - 3, 0)], "confidence": 0.34, "trace": [], "reason": "fallback для сильной рамки", "observationCount": 0}
+            return {"value": neutral_values[max(len(neutral_values) - 3, 0)], "confidence": 0.34, "trace": [], "reason": "fallback для сильной рамки / strong border fallback", "observationCount": 0}
 
     if role == "focus.ring" and primary_value:
-        return {"value": _with_alpha(primary_value, 0.4), "confidence": 0.35, "trace": [], "reason": "производное от primary", "observationCount": 0}
+        return {"value": _with_alpha(primary_value, 0.4), "confidence": 0.35, "trace": [], "reason": "производное от primary / derived from primary", "observationCount": 0}
     if role == "overlay.scrim" and primary_value:
-        return {"value": "rgba(0, 0, 0, 0.56)", "confidence": 0.35, "trace": [], "reason": "fallback для overlay", "observationCount": 0}
+        return {"value": "rgba(0, 0, 0, 0.56)", "confidence": 0.35, "trace": [], "reason": "fallback для overlay / overlay fallback", "observationCount": 0}
 
     family_preferences = STATUS_FAMILIES.get(role)
     if family_preferences:
         for family, value in palette:
             if family in family_preferences:
-                return {"value": value, "confidence": 0.39, "trace": [], "reason": f"fallback из палитры {family}", "observationCount": 0}
+                return {"value": value, "confidence": 0.39, "trace": [], "reason": f"fallback из палитры {family} / {family} palette fallback", "observationCount": 0}
     if role in {"primary.default", "secondary.default", "accent.default"}:
         saturated = [value for family, value in palette if family != "neutral"]
         if saturated:
             index = {"primary.default": 0, "secondary.default": min(1, len(saturated) - 1), "accent.default": min(2, len(saturated) - 1)}[role]
-            return {"value": saturated[index], "confidence": 0.39, "trace": [], "reason": "fallback из палитры", "observationCount": 0}
+            return {"value": saturated[index], "confidence": 0.39, "trace": [], "reason": "fallback из палитры / palette fallback", "observationCount": 0}
     return None
 
 
@@ -782,10 +782,10 @@ def _build_semantic_tokens(inspection: dict[str, Any], foundation: dict[str, Any
             document = capture.get("document", {})
             document_background = _canonicalize_color(document.get("bodyStyle", {}).get("backgroundColor")) or _canonicalize_color(document.get("rootStyle", {}).get("backgroundColor"))
             if document_background:
-                candidates["background.canvas"].append({"value": document_background, "confidence": 0.95, "reason": "фон документа", "trace": [_trace(capture, None, "base")], "observationCount": 1})
+                candidates["background.canvas"].append({"value": document_background, "confidence": 0.95, "reason": "фон документа / document background", "trace": [_trace(capture, None, "base")], "observationCount": 1})
             document_text = _canonicalize_color(document.get("bodyStyle", {}).get("color")) or _canonicalize_color(document.get("rootStyle", {}).get("color"))
             if document_text:
-                candidates["text.default"].append({"value": document_text, "confidence": 0.93, "reason": "цвет текста документа", "trace": [_trace(capture, None, "base")], "observationCount": 1})
+                candidates["text.default"].append({"value": document_text, "confidence": 0.93, "reason": "цвет текста документа / document text color", "trace": [_trace(capture, None, "base")], "observationCount": 1})
 
             for element in capture.get("elements", []):
                 component = element.get("component") or classify_component(element)
@@ -798,32 +798,32 @@ def _build_semantic_tokens(inspection: dict[str, Any], foundation: dict[str, Any
                 border = _canonicalize_color(base_style.get("borderTopColor"))
                 if component["type"] in {"card", "modal", "dialog", "dropdown", "menu", "input", "textarea", "select", "sidebar", "navbar"} and background:
                     role = "surface.raised" if component["type"] in {"modal", "dialog", "dropdown", "menu"} or base_style.get("boxShadow") not in {"none", "", None} else "surface.default"
-                    candidates[role].append({"value": background, "confidence": 0.88, "reason": f"поверхность компонента {component['type']}", "trace": [base_trace], "observationCount": 1})
+                    candidates[role].append({"value": background, "confidence": 0.88, "reason": f"поверхность компонента {component['type']} / {component['type']} surface", "trace": [base_trace], "observationCount": 1})
                 if component["type"] in {"button", "badge", "chip"} and background:
                     role = "primary.default" if variant in {"solid", "soft", "pill"} else "secondary.default"
                     confidence = 0.86 if role == "primary.default" else 0.74
-                    candidates[role].append({"value": background, "confidence": confidence, "reason": f"фон {component['type']} в варианте {variant}", "trace": [base_trace], "observationCount": 1})
+                    candidates[role].append({"value": background, "confidence": confidence, "reason": f"фон {component['type']} в варианте {variant} / {component['type']} {variant} background", "trace": [base_trace], "observationCount": 1})
                     if foreground:
-                        candidates["text.inverse"].append({"value": foreground, "confidence": 0.8, "reason": f"цвет текста компонента {component['type']}", "trace": [base_trace], "observationCount": 1})
+                        candidates["text.inverse"].append({"value": foreground, "confidence": 0.8, "reason": f"цвет текста компонента {component['type']} / {component['type']} foreground", "trace": [base_trace], "observationCount": 1})
                 if component["type"] == "link" and foreground:
-                    candidates["accent.default"].append({"value": foreground, "confidence": 0.72, "reason": "цвет ссылки", "trace": [base_trace], "observationCount": 1})
-                    candidates["text.link"].append({"value": foreground, "confidence": 0.76, "reason": "цвет ссылки", "trace": [base_trace], "observationCount": 1})
+                    candidates["accent.default"].append({"value": foreground, "confidence": 0.72, "reason": "цвет ссылки / link foreground", "trace": [base_trace], "observationCount": 1})
+                    candidates["text.link"].append({"value": foreground, "confidence": 0.76, "reason": "цвет ссылки / link foreground", "trace": [base_trace], "observationCount": 1})
                 if border:
-                    candidates["border.default"].append({"value": border, "confidence": 0.8, "reason": "рамка компонента", "trace": [base_trace], "observationCount": 1})
+                    candidates["border.default"].append({"value": border, "confidence": 0.8, "reason": "рамка компонента / component border", "trace": [base_trace], "observationCount": 1})
                 status_role = _status_hint(element)
                 if status_role and (background or foreground or border):
                     status_value = background or foreground or border
-                    candidates[status_role].append({"value": status_value, "confidence": 0.84, "reason": f"подсказка из class для роли {status_role}", "trace": [base_trace], "observationCount": 1})
+                    candidates[status_role].append({"value": status_value, "confidence": 0.84, "reason": f"подсказка из class для роли {status_role} / {status_role} class hint", "trace": [base_trace], "observationCount": 1})
                 if "focus" in element.get("states", {}):
                     focus_style = element["states"]["focus"]["style"]
                     focus_color = _canonicalize_color(focus_style.get("outlineColor")) or _canonicalize_color(focus_style.get("boxShadow"))
                     if focus_color:
-                        candidates["focus.ring"].append({"value": focus_color, "confidence": 0.82, "reason": "наблюдаемое focus-состояние", "trace": [_trace(capture, element, "focus")], "observationCount": 1})
+                        candidates["focus.ring"].append({"value": focus_color, "confidence": 0.82, "reason": "наблюдаемое focus-состояние / observed focus state", "trace": [_trace(capture, element, "focus")], "observationCount": 1})
                 if component["type"] in {"modal", "dialog"}:
                     for state_name, state in element.get("states", {}).items():
                         overlay_color = _canonicalize_color(state.get("style", {}).get("backgroundColor"))
                         if overlay_color and overlay_color.startswith("rgba"):
-                            candidates["overlay.scrim"].append({"value": overlay_color, "confidence": 0.62, "reason": "полупрозрачная поверхность modal", "trace": [_trace(capture, element, state_name)], "observationCount": 1})
+                            candidates["overlay.scrim"].append({"value": overlay_color, "confidence": 0.62, "reason": "полупрозрачная поверхность modal / modal translucent surface", "trace": [_trace(capture, element, state_name)], "observationCount": 1})
 
         theme_roles[theme] = {}
         primary_candidate = _aggregate_candidates(candidates["primary.default"])

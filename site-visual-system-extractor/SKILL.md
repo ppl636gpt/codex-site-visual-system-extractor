@@ -1,6 +1,6 @@
 ---
 name: site-visual-system-extractor
-description: Извлекай переиспользуемую визуальную систему и design tokens из живого сайта, веб-приложения по URL или локально сохранённой папки сайта в Figma-friendly output. Используй skill, когда Codex нужно анализировать rendered UI, computed styles, CSS variables, темы, responsive layout, состояния компонентов и повторяемые UI-паттерны без копирования бизнес-логики и контента.
+description: Извлекай переиспользуемую визуальную систему и design tokens из живого сайта, веб-приложения по URL или локально сохранённой папки сайта в Figma-friendly output. Use this skill when Codex needs to inspect rendered UI, computed styles, CSS variables, themes, responsive layouts, component states, and reusable UI patterns without cloning business logic or copying content.
 ---
 
 # Site Visual System Extractor
@@ -147,3 +147,87 @@ python3 scripts/extract_site_tokens.py \
 - Если локальному SPA нужен routing, укажи `--source` на build/export directory; скрипт поднимет локальный сервер с SPA fallback.
 - Если hydration занимает дольше обычного, увеличь `--wait-ms`.
 - Если страница зависит от уже работающего dev server, запусти его отдельно и передай его URL в `--source`.
+
+## English
+
+Extract only the reusable visual layer from an existing site or application and convert it into design-system artifacts for a Figma-first workflow. Treat the rendered interface as the source of truth: inspect hydrated DOM, computed styles, active CSS variables, responsive behavior, and safe interaction states instead of relying on source CSS alone.
+
+### Scope
+
+- Extract foundation tokens: color, typography, spacing, sizing, radius, shadow, border, opacity, and observed motion-related visual timing.
+- Extract semantic roles: primary, secondary, accent, background, surface, text, muted text, inverse text, success, warning, danger, info, border roles, overlay, and focus ring.
+- Extract component tokens and reusable UI patterns for common controls and surfaces.
+- Export Figma-friendly outputs: `tokens.foundation.json`, `tokens.semantic.json`, `tokens.components.json`, `tokens.themes.json`, `figma-mapping.json`, `components-summary.md`, and `design-audit.md`.
+
+### Non-goals
+
+- Do not clone backend, API behavior, or JS business logic.
+- Do not copy page text, user data, or content-heavy payloads.
+- Do not rebuild the source site as a working product.
+
+### Required scripts
+
+- `scripts/extract_site_tokens.py` for end-to-end extraction
+- `scripts/inspect_rendered_ui.py` for raw rendered inspection
+- `scripts/normalize_tokens.py` to rebuild token files from `inspection.raw.json`
+- `scripts/build_figma_mapping.py` to rebuild Figma mapping and markdown reports
+
+### Setup
+
+```bash
+python3 -m pip install -r scripts/requirements.txt
+python3 -m playwright install chromium
+```
+
+### Standard run
+
+```bash
+python3 scripts/extract_site_tokens.py \
+  --source https://example.com \
+  --page / \
+  --page /pricing \
+  --page /dashboard \
+  --theme light \
+  --theme dark \
+  --state hover \
+  --state focus \
+  --state active \
+  --output ./output/example-site
+```
+
+### Input rules
+
+- `--source`: remote URL, local HTML file, or local site directory
+- `--page`: repeatable route or page path
+- `--theme`: `auto`, `light`, `dark`
+- `--viewport`: `name=WIDTHxHEIGHT`
+- `--state`: `hover`, `focus`, `active`
+
+### Extraction rules
+
+- Use rendered DOM and computed styles as the source of truth.
+- Collect active CSS custom properties from root, body, and sampled elements.
+- Sample visible component candidates and layout containers instead of the entire DOM.
+- Capture safe states only.
+- Preserve traceability for page, theme, viewport, selector, component classification, and state.
+
+### Safety rules
+
+- Never copy page text into outputs.
+- Never serialize form values or user-specific data.
+- Never preserve API responses in outputs.
+- Keep the result focused on reusable visual-system evidence only.
+
+### Output contract
+
+- `tokens.foundation.json`
+- `tokens.semantic.json`
+- `tokens.components.json`
+- `tokens.themes.json`
+- `figma-mapping.json`
+- `components-summary.md`
+- `design-audit.md`
+
+Optional:
+
+- `inspection.raw.json` when `--keep-intermediate` is enabled.

@@ -94,3 +94,22 @@
 - Захватывай `hover`, `focus` и `active` через безопасные interactions.
 - Производные `disabled`, `checked`, `selected`, `open` и `closed` бери из существующего DOM state.
 - Не подменяй отсутствующие состояния предположениями.
+
+## English
+
+Identify reusable UI primitives from rendered HTML without relying on page copy.
+
+### Primary signals
+
+- tag and input type
+- ARIA role
+- stable class keywords
+- computed-style signature
+- layout role
+- existing DOM state attributes
+
+### State rules
+
+- Probe `hover`, `focus`, and `active` safely.
+- Derive `disabled`, `checked`, `selected`, and `open` from real DOM state when available.
+- Do not invent missing states.

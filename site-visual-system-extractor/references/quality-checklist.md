@@ -33,3 +33,20 @@
 - Подтверди, что `design-audit.md` описывает limitations и неоднозначности.
 - Подтверди, что повторяемые patterns и inconsistencies явно отмечены.
 - Подтверди, что надёжно извлечённые факты отделены от эвристики.
+
+## English
+
+Use this checklist before delivery.
+
+### Coverage
+
+- Confirm representative pages were inspected.
+- Confirm required themes were inspected.
+- Confirm responsive layouts were sampled at relevant viewports.
+- Confirm major component families were found or explicitly marked missing.
+
+### Safety and quality
+
+- Confirm outputs contain no copied page text or user data.
+- Confirm tokens are deduplicated and aliases are used where possible.
+- Confirm `figma-mapping.json`, `components-summary.md`, and `design-audit.md` are present and coherent.

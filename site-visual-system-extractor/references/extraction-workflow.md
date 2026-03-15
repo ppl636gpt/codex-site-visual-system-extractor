@@ -59,3 +59,25 @@
 - Если маршрут не загрузился, продолжай и зафиксируй это в audit.
 - Если состояние не удалось захватить, сохраняй base state и явно отмечай пробел.
 - Если CSSOM недоступен из-за cross-origin ограничений, опирайся на computed styles и DOM evidence.
+
+## English
+
+Use this workflow when tuning the rendered inspection pipeline or deciding how many pages, themes, and states to analyze.
+
+### Sequence
+
+1. Resolve the source: remote URL, local directory, or local HTML file.
+2. Expand target pages based on layout diversity, not content diversity.
+3. Expand themes: `auto`, `light`, `dark`.
+4. Expand viewports: mobile, tablet, desktop by default.
+5. Load each page with Playwright and wait for `domcontentloaded`, `networkidle`, settle delay, and one animation frame.
+6. Collect rendered evidence: root/body styles, CSS variables, CSSOM signals, component candidates, and layout containers.
+7. Capture safe interactive states.
+8. Normalize evidence into tokens.
+9. Export Figma-oriented mapping and markdown audit.
+
+### Reliability
+
+- High confidence: directly observed values
+- Medium confidence: stable inference from repeated usage
+- Low confidence: heuristic semantic assignment

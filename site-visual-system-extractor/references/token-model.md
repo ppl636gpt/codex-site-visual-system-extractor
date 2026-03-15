@@ -84,3 +84,21 @@
 - Держи semantic names role-oriented, а не palette-oriented.
 - Держи component names привязанными к UI-примитивам, а не к продуктовой терминологии.
 - Держи theme names буквальными: `auto`, `light`, `dark` или реально обнаруженные имена режимов.
+
+## English
+
+Emit DTCG-like JSON that stays readable, traceable, and practical for Figma Variables or Tokens Studio.
+
+### File boundaries
+
+- `tokens.foundation.json` for base tokens
+- `tokens.semantic.json` for semantic roles
+- `tokens.components.json` for component variants, sizes, themes, and states
+- `tokens.themes.json` for theme-specific semantic overrides
+
+### Rules
+
+- Prefer aliases over raw literals whenever a stable token already exists.
+- Keep trace samples in `$extensions.codex.trace`.
+- Use confidence to separate observed facts from heuristics.
+- Keep names predictable, role-based, and reusable.

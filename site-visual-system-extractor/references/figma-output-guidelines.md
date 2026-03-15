@@ -50,3 +50,20 @@
 - Сохраняй alias strings без предварительного разворачивания.
 - По возможности сохраняй composite typography, border и shadow values как есть.
 - Сохраняй `$extensions.codex`, чтобы при ручной доработке не терялся evidence trail.
+
+## English
+
+Translate extracted tokens into a structure that is easy to map into Figma Variables, Styles, and Tokens Studio.
+
+### Recommended collections
+
+- `Foundation`
+- `Semantic`
+- `Components`
+
+### Guidance
+
+- Map themes to Figma modes.
+- Preserve aliases instead of flattening them.
+- Keep composite typography, border, and shadow values whenever possible.
+- Preserve `$extensions.codex` for traceability.
