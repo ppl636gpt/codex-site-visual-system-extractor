@@ -1,63 +1,48 @@
 ---
 name: site-visual-system-extractor
-description: Извлекай переиспользуемую визуальную систему и design tokens из живого сайта, веб-приложения по URL или локально сохранённой папки сайта в Figma-friendly output. Use this skill when Codex needs to inspect rendered UI, computed styles, CSS variables, themes, responsive layouts, component states, and reusable UI patterns without cloning business logic or copying content.
+description: Extract a reusable visual system and design tokens from a live website, web app, or local static export into Figma-friendly outputs. Use this skill when Codex needs rendered UI inspection, computed styles, CSS variables, themes, responsive layouts, component states, and reusable UI patterns without copying content or business logic.
 ---
 
 # Site Visual System Extractor
 
-Извлекай только переиспользуемый визуальный слой из существующего сайта или приложения и преобразуй его в артефакты дизайн-системы для Figma-first workflow. Считай источником истины именно отрендеренный интерфейс: анализируй hydrated DOM, computed styles, активные CSS variables, responsive-поведение и безопасные interactive states, а не только исходные CSS-файлы.
+Extract only the reusable visual layer from an existing site or app and convert it into design-system artifacts for a Figma-first workflow. Treat the rendered interface as the source of truth: inspect hydrated DOM, computed styles, active CSS variables, responsive behavior, and safe interaction states instead of relying on source CSS alone.
 
-## Область применения
+## Use This Skill When
 
-- Извлекай foundation tokens: color, typography, spacing, sizing, radius, shadow, border, opacity и motion-related визуальные параметры, если они реально наблюдаются.
-- Извлекай semantic roles: primary, secondary, accent, background, surface, text, muted text, inverse text, success, warning, danger, info, border roles, overlay и focus ring.
-- Извлекай component tokens и переиспользуемые UI-паттерны для распространённых контролов и поверхностей.
-- Экспортируй Figma-friendly outputs: `tokens.foundation.json`, `tokens.semantic.json`, `tokens.components.json`, `tokens.themes.json`, `figma-mapping.json`, `components-summary.md` и `design-audit.md`.
+- The source is a public URL, local static site folder, or local HTML file.
+- The goal is to recover design tokens, themes, reusable component styling, or layout patterns.
+- The output must be Figma-friendly and safe to reuse as a design-system baseline.
+- The task must avoid copying content, user data, backend behavior, or business logic.
 
-## Что skill не делает
+## Do Not Use This Skill For
 
-- Не клонируй backend, API-поведение или JS-бизнес-логику.
-- Не копируй тексты, пользовательские данные и контентные payload.
-- Не восстанавливай исходный сайт как рабочий продукт.
-- Не считай обязательными скрытые или недоступные маршруты. Вместо этого фиксируй пробелы в отчёте.
+- Rebuilding the source product as a working clone.
+- Extracting backend or API behavior.
+- Copying page text, form values, or user-specific data.
+- Recovering hidden flows that require privileged authentication or unsafe actions.
 
-## Обязательные ресурсы
+## Required Resources
 
-- Используй `scripts/extract_site_tokens.py` для полного end-to-end workflow.
-- Используй `scripts/inspect_rendered_ui.py`, если нужен только сырой rendered inspection.
-- Используй `scripts/normalize_tokens.py`, чтобы пересобрать token-файлы из сохранённого inspection.
-- Используй `scripts/build_figma_mapping.py`, чтобы пересобрать Figma mapping и markdown-отчёты.
+- `scripts/extract_site_tokens.py` -> default end-to-end path
+- `scripts/inspect_rendered_ui.py` -> raw rendered inspection only
+- `scripts/normalize_tokens.py` -> rebuild token files from saved inspection
+- `scripts/build_figma_mapping.py` -> rebuild Figma mapping and markdown reports
 
-Читайте reference-файлы только по необходимости:
+Read references only when needed:
 
-- Читай [references/extraction-workflow.md](references/extraction-workflow.md), когда нужно скорректировать порядок захвата или решить, сколько страниц, тем и состояний анализировать.
-- Читай [references/token-model.md](references/token-model.md), когда меняешь token schema, aliases или traceability fields.
-- Читай [references/figma-output-guidelines.md](references/figma-output-guidelines.md), когда настраиваешь Figma collections, modes или совместимость с Tokens Studio.
-- Читай [references/component-detection-guidelines.md](references/component-detection-guidelines.md), когда нужно уточнить эвристики детекции компонентов.
-- Читай [references/quality-checklist.md](references/quality-checklist.md) перед финальной сдачей результата.
+- `references/extraction-workflow.md` -> scope planning, capture order, themes, viewports, states
+- `references/token-model.md` -> token schema, aliases, traceability, confidence
+- `references/figma-output-guidelines.md` -> Figma variables, collections, modes, Tokens Studio mapping
+- `references/component-detection-guidelines.md` -> component heuristics and state classification
+- `references/quality-checklist.md` -> final QA before delivery
 
-## Подготовка
+## Default Workflow
 
-1. Установи Python-зависимости:
-
-```bash
-python3 -m pip install -r scripts/requirements.txt
-python3 -m playwright install chromium
-```
-
-2. Выбери источник:
-   - Удалённый сайт: передай `--source https://example.com`.
-   - Локальную папку со статическим экспортом: передай `--source /path/to/site-export`.
-   - Локальный HTML-файл: передай `--source /path/to/index.html`.
-3. Выбери репрезентативные страницы или маршруты. Предпочитай 3-8 экранов, покрывающих основные поверхности, формы, навигацию, таблицы, диалоги и статусы.
-4. Выбери покрытие тем. По умолчанию используй `auto`. Добавляй `light` и `dark`, когда тема действительно важна.
-
-## Стандартный workflow
-
-1. Определи scope.
-   - Предпочитай явные `--page` для важных маршрутов.
-   - По возможности включай auth, dashboard, settings, marketing, table, form и modal-маршруты.
-2. Запусти extractor.
+1. Define scope.
+   - Prefer 3-8 representative pages.
+   - Include key surfaces such as navigation, forms, tables, dialogs, cards, and status UI.
+   - Include `light` and `dark` only when they actually exist.
+2. Run the end-to-end extractor.
 
 ```bash
 python3 scripts/extract_site_tokens.py \
@@ -73,152 +58,45 @@ python3 scripts/extract_site_tokens.py \
   --output ./output/example-site
 ```
 
-3. Проверь сгенерированные файлы.
-   - Сначала открой `design-audit.md`, чтобы увидеть confidence, limitations и inconsistencies.
-   - Затем открой `components-summary.md`, чтобы оценить покрытие компонентов и состояний.
-   - После этого смотри token JSON-файлы, если нужно скорректировать naming или aliasing.
-4. Перезапусти extraction с более узким scope, если результат шумный.
-   - Сократи `--page`.
-   - Ограничь `--viewport`.
-   - Оставь только нужные темы.
-   - Используй `--max-elements`, чтобы уменьшить over-sampling.
+3. Review outputs in this order:
+   - `design-audit.md`
+   - `components-summary.md`
+   - token JSON files
+4. If the result is noisy, rerun with narrower scope:
+   - fewer `--page`
+   - fewer themes
+   - fewer viewports
+   - lower `--max-elements`
 
-## Правила входных данных
+## Input Rules
 
-- Принимай `--source` как URL или локальный путь.
-- Принимай повторяющиеся `--page`. Интерпретируй относительные значения относительно base URL или корня локального сервера.
-- Принимай повторяющиеся `--theme` из набора `auto`, `light`, `dark`.
-- Принимай повторяющиеся `--state` из набора `hover`, `focus`, `active`. Всегда захватывай `base`. Производные состояния `disabled`, `checked`, `selected` и `open` бери из реального DOM, если они уже есть.
-- Принимай повторяющиеся `--viewport` в формате `name=WIDTHxHEIGHT` для responsive inspection.
-
-## Правила извлечения
-
-- Используй rendered DOM и computed styles как основной источник истины.
-- Собирай активные CSS custom properties из root, body и sampled elements.
-- Семплируй видимые component candidates и structural containers, а не весь DOM целиком.
-- Захватывай безопасные состояния через Playwright:
-  - `hover`
-  - `focus`
-  - `active` через pointer down без полного submit/click flow
-- Записывай traceability для каждого token sample:
-  - page
-  - theme
-  - viewport
-  - selector
-  - component classification
-  - state
-  - CSS variable source, если он есть
-
-## Правила безопасности
-
-- Никогда не копируй текст страницы в deliverable.
-- Никогда не сериализуй значения форм или пользовательские данные.
-- Никогда не пытайся проходить privileged auth flows только ради скрытого UI.
-- Никогда не сохраняй API-ответы, даже если они были нужны для рендера страницы.
-- Держи output сфокусированным только на evidence переиспользуемой визуальной системы.
-
-## Контракт результата
-
-Записывай в output directory следующие файлы:
-
-- `tokens.foundation.json`
-- `tokens.semantic.json`
-- `tokens.components.json`
-- `tokens.themes.json`
-- `figma-mapping.json`
-- `components-summary.md`
-- `design-audit.md`
-
-Опционально:
-
-- `inspection.raw.json`, если включён `--keep-intermediate`.
-
-## Правила сдачи
-
-- Отделяй надёжные наблюдения от эвристических предположений через confidence metadata.
-- Предпочитай token aliases сырым literal values, когда уже найден стабильный foundation или semantic token.
-- Сохраняй theme-specific overrides в `tokens.themes.json`.
-- Сохраняй различия component states только если они реально наблюдались или были безопасно смоделированы.
-- Отмечай отсутствующие маршруты, недоступные состояния и неоднозначную семантику в `design-audit.md`.
-
-## Troubleshooting
-
-- Если отсутствует Playwright, установи его и Chromium перед повторным запуском.
-- Если локальному SPA нужен routing, укажи `--source` на build/export directory; скрипт поднимет локальный сервер с SPA fallback.
-- Если hydration занимает дольше обычного, увеличь `--wait-ms`.
-- Если страница зависит от уже работающего dev server, запусти его отдельно и передай его URL в `--source`.
-
-## English
-
-Extract only the reusable visual layer from an existing site or application and convert it into design-system artifacts for a Figma-first workflow. Treat the rendered interface as the source of truth: inspect hydrated DOM, computed styles, active CSS variables, responsive behavior, and safe interaction states instead of relying on source CSS alone.
-
-### Scope
-
-- Extract foundation tokens: color, typography, spacing, sizing, radius, shadow, border, opacity, and observed motion-related visual timing.
-- Extract semantic roles: primary, secondary, accent, background, surface, text, muted text, inverse text, success, warning, danger, info, border roles, overlay, and focus ring.
-- Extract component tokens and reusable UI patterns for common controls and surfaces.
-- Export Figma-friendly outputs: `tokens.foundation.json`, `tokens.semantic.json`, `tokens.components.json`, `tokens.themes.json`, `figma-mapping.json`, `components-summary.md`, and `design-audit.md`.
-
-### Non-goals
-
-- Do not clone backend, API behavior, or JS business logic.
-- Do not copy page text, user data, or content-heavy payloads.
-- Do not rebuild the source site as a working product.
-
-### Required scripts
-
-- `scripts/extract_site_tokens.py` for end-to-end extraction
-- `scripts/inspect_rendered_ui.py` for raw rendered inspection
-- `scripts/normalize_tokens.py` to rebuild token files from `inspection.raw.json`
-- `scripts/build_figma_mapping.py` to rebuild Figma mapping and markdown reports
-
-### Setup
-
-```bash
-python3 -m pip install -r scripts/requirements.txt
-python3 -m playwright install chromium
-```
-
-### Standard run
-
-```bash
-python3 scripts/extract_site_tokens.py \
-  --source https://example.com \
-  --page / \
-  --page /pricing \
-  --page /dashboard \
-  --theme light \
-  --theme dark \
-  --state hover \
-  --state focus \
-  --state active \
-  --output ./output/example-site
-```
-
-### Input rules
-
-- `--source`: remote URL, local HTML file, or local site directory
+- `--source`: remote URL, local site directory, or local HTML file
 - `--page`: repeatable route or page path
 - `--theme`: `auto`, `light`, `dark`
 - `--viewport`: `name=WIDTHxHEIGHT`
 - `--state`: `hover`, `focus`, `active`
 
-### Extraction rules
+Always treat `base` as required. Capture derived states such as `disabled`, `checked`, `selected`, and `open` only when they already exist in the rendered UI or can be observed safely.
+
+## Extraction Rules
 
 - Use rendered DOM and computed styles as the source of truth.
 - Collect active CSS custom properties from root, body, and sampled elements.
-- Sample visible component candidates and layout containers instead of the entire DOM.
-- Capture safe states only.
+- Sample visible component candidates and structural layout containers instead of the entire DOM.
+- Capture only safe interaction states.
 - Preserve traceability for page, theme, viewport, selector, component classification, and state.
 
-### Safety rules
+## Safety Rules
 
 - Never copy page text into outputs.
 - Never serialize form values or user-specific data.
-- Never preserve API responses in outputs.
-- Keep the result focused on reusable visual-system evidence only.
+- Never preserve API payloads in outputs.
+- Never trigger unsafe actions just to discover a state.
+- Keep the output limited to reusable visual-system evidence.
 
-### Output contract
+## Output Contract
+
+Write these files to the output directory:
 
 - `tokens.foundation.json`
 - `tokens.semantic.json`
@@ -230,4 +108,18 @@ python3 scripts/extract_site_tokens.py \
 
 Optional:
 
-- `inspection.raw.json` when `--keep-intermediate` is enabled.
+- `inspection.raw.json` when `--keep-intermediate` is enabled
+
+## Delivery Rules
+
+- Separate reliable observations from heuristic assignments via confidence metadata.
+- Prefer aliases over repeated literal values when a stable token already exists.
+- Keep theme-specific overrides in `tokens.themes.json`.
+- Record missing routes, unavailable states, and ambiguous semantics in `design-audit.md`.
+
+## Troubleshooting
+
+- If Playwright is missing, install Chromium before rerunning.
+- If hydration is slow, increase `--wait-ms`.
+- If a local SPA needs routing, point `--source` at the exported site directory so the script can serve it with SPA fallback.
+- If the UI depends on an already running dev server, start that server first and pass its URL as `--source`.
