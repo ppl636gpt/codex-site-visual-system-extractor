@@ -353,12 +353,12 @@ def summarize_structure(element: dict[str, Any]) -> str:
         parts.append(display)
     child_count = element.get("childCount")
     if isinstance(child_count, int):
-        parts.append(f"{child_count} children")
+        parts.append(f"{child_count} дочерних элементов")
     if style.get("gridTemplateColumns") and style.get("gridTemplateColumns") != "none":
         parts.append("grid")
     if style.get("flexDirection"):
         parts.append(f"flex-{style['flexDirection']}")
-    return ", ".join(parts) or "structure not classified"
+    return ", ".join(parts) or "структура не классифицирована"
 
 
 def state_names(element: dict[str, Any]) -> list[str]:

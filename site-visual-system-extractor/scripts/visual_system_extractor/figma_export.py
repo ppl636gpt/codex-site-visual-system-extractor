@@ -111,33 +111,33 @@ def _build_figma_mapping(normalized: dict[str, Any]) -> dict[str, Any]:
                 "component": entry["component"],
                 "suggestedFigmaName": entry["component"].replace("-", " ").title(),
                 "properties": {
-                    "Variant": entry["variant"],
-                    "Size": entry["size"],
-                    "Theme": entry["theme"],
-                    "State": entry["states"],
+                    "Вариант": entry["variant"],
+                    "Размер": entry["size"],
+                    "Тема": entry["theme"],
+                    "Состояние": entry["states"],
                 },
                 "documentationNotes": {
-                    "usedTokenRefs": entry["usedTokenRefs"],
-                    "whereFound": entry["whereFound"],
-                    "structure": entry["structure"],
+                    "используемыеТокены": entry["usedTokenRefs"],
+                    "гдеНайдено": entry["whereFound"],
+                    "структура": entry["structure"],
                     "confidence": entry["confidence"],
                 },
             }
             for entry in component_entries
         ],
         "notes": [
-            "Map foundation tokens to Figma Variables in the Foundation collection.",
-            "Map semantic tokens to the Semantic collection and themes to Figma modes.",
-            "Treat component mappings as documentation for component properties, variants, and states.",
+            "Сопоставь foundation tokens с Figma Variables в коллекции Foundation.",
+            "Сопоставь semantic tokens с коллекцией Semantic, а темы с Figma modes.",
+            "Используй component mappings как документацию для свойств, вариантов и состояний компонентов.",
         ],
     }
 
 
 def _render_components_summary(components: dict[str, Any]) -> str:
-    lines = ["# Components Summary", ""]
+    lines = ["# Сводка по компонентам", ""]
     entries = _iter_component_entries(components)
     if not entries:
-        lines.append("No reusable component families were detected with sufficient confidence.")
+        lines.append("Переиспользуемые семейства компонентов с достаточной confidence не обнаружены.")
         return "\n".join(lines)
 
     grouped: dict[str, list[dict[str, Any]]] = defaultdict(list)
@@ -149,12 +149,12 @@ def _render_components_summary(components: dict[str, Any]) -> str:
         lines.append("")
         for entry in sorted(items, key=lambda item: (item["variant"], item["size"], item["theme"])):
             lines.append(f"### {entry['variant']} / {entry['size']} / {entry['theme']}")
-            lines.append(f"- Found on: {', '.join(entry['whereFound']) or 'n/a'}")
-            lines.append(f"- States: {', '.join(entry['states']) or 'base'}")
-            lines.append(f"- Tokens: {', '.join(entry['usedTokenRefs']) or 'raw values remain'}")
-            lines.append(f"- Structure: {entry['structure'] or 'not classified'}")
-            reuse = "high" if (entry["confidence"] or 0) >= 0.8 else "medium" if (entry["confidence"] or 0) >= 0.6 else "low"
-            lines.append(f"- Reusability: {reuse}")
+            lines.append(f"- Где найдено: {', '.join(entry['whereFound']) or 'n/a'}")
+            lines.append(f"- Состояния: {', '.join(entry['states']) or 'base'}")
+            lines.append(f"- Токены: {', '.join(entry['usedTokenRefs']) or 'остались raw values'}")
+            lines.append(f"- Структура: {entry['structure'] or 'не классифицирована'}")
+            reuse = "высокая" if (entry["confidence"] or 0) >= 0.8 else "средняя" if (entry["confidence"] or 0) >= 0.6 else "низкая"
+            lines.append(f"- Переиспользуемость: {reuse}")
             lines.append(f"- Confidence: {entry['confidence'] or 0:.2f}")
             lines.append("")
     return "\n".join(lines)
@@ -177,11 +177,11 @@ def _scale_summary(group: dict[str, Any]) -> str:
                 values.append("/".join(str(part) for part in raw_value.keys()))
             else:
                 values.append(str(raw_value))
-    return ", ".join(values) if values else "none detected"
+    return ", ".join(values) if values else "не обнаружено"
 
 
 def _token_names(group: dict[str, Any]) -> str:
-    return ", ".join(group.keys()) if group else "none detected"
+    return ", ".join(group.keys()) if group else "не обнаружено"
 
 
 def _layout_observations(inspection: dict[str, Any]) -> list[str]:
@@ -208,12 +208,12 @@ def _layout_observations(inspection: dict[str, Any]) -> list[str]:
         observations.append(f"- Dominant layout modes: {', '.join(f'{mode} ({count})' for mode, count in display_modes.most_common(4))}")
     if grid_patterns:
         observations.append(f"- Grid patterns: {', '.join(pattern for pattern, _ in grid_patterns.most_common(4))}")
-    return observations or ["- Layout evidence was limited to inline component surfaces."]
+    return observations or ["- Доказательства по layout ограничились inline и surface-элементами."]
 
 
 def _theme_model(inspection: dict[str, Any], normalized: dict[str, Any]) -> list[str]:
     themes = sorted(normalized["themes"].keys())
-    lines = [f"- Extracted themes: {', '.join(themes)}"]
+    lines = [f"- Извлечённые темы: {', '.join(themes)}"]
     theme_hints: Counter[str] = Counter()
     for capture in inspection.get("captures", []):
         hints = capture.get("document", {}).get("themeHints", {})
@@ -230,8 +230,8 @@ def _repeated_patterns(normalized: dict[str, Any]) -> list[str]:
     entries = _iter_component_entries(normalized["components"])
     component_counts: Counter[str] = Counter(entry["component"] for entry in entries)
     if not component_counts:
-        return ["- No repeated component patterns passed the confidence threshold."]
-    return [f"- {component}: {count} variant/theme groups" for component, count in component_counts.most_common(8)]
+        return ["- Повторяющиеся component patterns выше порога confidence не обнаружены."]
+    return [f"- {component}: {count} групп variant/theme" for component, count in component_counts.most_common(8)]
 
 
 def _inconsistencies(normalized: dict[str, Any]) -> list[str]:
@@ -241,13 +241,13 @@ def _inconsistencies(normalized: dict[str, Any]) -> list[str]:
     shadow_count = len(foundation.get("shadows", {}))
     notes = []
     if spacing_count > 14:
-        notes.append(f"- Spacing scale is broad ({spacing_count} values); manual consolidation may improve reuse.")
+        notes.append(f"- Spacing scale слишком широкая ({spacing_count} значений); ручная консолидация может улучшить переиспользование.")
     if radius_count > 7:
-        notes.append(f"- Radius scale has {radius_count} values; check whether near-duplicates can merge.")
+        notes.append(f"- Radius scale содержит {radius_count} значений; проверь, можно ли объединить почти одинаковые токены.")
     if shadow_count > 6:
-        notes.append(f"- Shadow scale has {shadow_count} entries; verify whether elevation tiers can be simplified.")
+        notes.append(f"- Shadow scale содержит {shadow_count} значений; проверь, можно ли упростить уровни elevation.")
     if not notes:
-        notes.append("- No major scale inconsistencies were detected from the extracted sample.")
+        notes.append("- Существенных несогласованностей scale в извлечённой выборке не обнаружено.")
     return notes
 
 
@@ -262,8 +262,8 @@ def _confidence_lines(normalized: dict[str, Any]) -> list[str]:
         if component_entry["confidence"] is not None:
             confidence_values.append(component_entry["confidence"])
     if confidence_values:
-        return [f"- Average reusable-component confidence: {mean(confidence_values):.2f}"]
-    return ["- Component confidence could not be computed from the sampled set."]
+        return [f"- Средняя confidence переиспользуемых компонентов: {mean(confidence_values):.2f}"]
+    return ["- Не удалось вычислить confidence компонентов по текущей выборке."]
 
 
 def _limitations(inspection: dict[str, Any]) -> list[str]:
@@ -273,9 +273,9 @@ def _limitations(inspection: dict[str, Any]) -> list[str]:
         lines.extend(f"- {warning}" for warning in warnings[:8])
     errors = [capture for capture in inspection.get("captures", []) if capture.get("loadError")]
     if errors:
-        lines.extend(f"- Failed to load {capture['page']} ({capture['theme']}/{capture['viewport']['name']}): {capture['loadError']}" for capture in errors[:6])
+        lines.extend(f"- Не удалось загрузить {capture['page']} ({capture['theme']}/{capture['viewport']['name']}): {capture['loadError']}" for capture in errors[:6])
     if not lines:
-        lines.append("- No major extraction failures were recorded.")
+        lines.append("- Существенных сбоев извлечения не зафиксировано.")
     return lines
 
 
@@ -302,48 +302,48 @@ def _reliability_breakdown(normalized: dict[str, Any]) -> list[str]:
     for root_name in ("foundation", "semantic", "themes"):
         walk(normalized[root_name])
     return [
-        f"- Reliable tokens (confidence >= 0.85): {reliable}",
-        f"- Heuristic tokens (confidence < 0.60): {heuristic}",
+        f"- Надёжные токены (confidence >= 0.85): {reliable}",
+        f"- Эвристические токены (confidence < 0.60): {heuristic}",
     ]
 
 
 def _render_design_audit(inspection: dict[str, Any], normalized: dict[str, Any]) -> str:
     foundation = normalized["foundation"]
-    lines = ["# Design Audit", ""]
-    lines.append("## Palette Summary")
+    lines = ["# Аудит дизайн-системы", ""]
+    lines.append("## Сводка по палитре")
     lines.extend(_palette_summary(foundation))
     lines.append("")
-    lines.append("## Typography Scale")
+    lines.append("## Типографическая шкала")
     lines.append(f"- Font families: {_scale_summary(foundation.get('typography', {}).get('family', {}))}")
     lines.append(f"- Font sizes: {_scale_summary(foundation.get('typography', {}).get('size', {}))}")
     lines.append(f"- Typography styles: {_token_names(foundation.get('typography', {}).get('style', {}))}")
     lines.append("")
-    lines.append("## Spacing Scale")
+    lines.append("## Шкала отступов")
     lines.append(f"- {_scale_summary(foundation.get('spacing', {}))}")
     lines.append("")
-    lines.append("## Radius Scale")
+    lines.append("## Шкала радиусов")
     lines.append(f"- {_scale_summary(foundation.get('radii', {}))}")
     lines.append("")
-    lines.append("## Shadow Scale")
+    lines.append("## Шкала теней")
     lines.append(f"- {_scale_summary(foundation.get('shadows', {}))}")
     lines.append("")
-    lines.append("## Layout Observations")
+    lines.append("## Наблюдения по layout")
     lines.extend(_layout_observations(inspection))
     lines.append("")
-    lines.append("## Theme Model")
+    lines.append("## Модель тем")
     lines.extend(_theme_model(inspection, normalized))
     lines.append("")
-    lines.append("## Repeated UI Patterns")
+    lines.append("## Повторяющиеся UI-паттерны")
     lines.extend(_repeated_patterns(normalized))
     lines.append("")
-    lines.append("## Inconsistencies")
+    lines.append("## Несогласованности")
     lines.extend(_inconsistencies(normalized))
     lines.append("")
-    lines.append("## Confidence Notes")
+    lines.append("## Заметки по confidence")
     lines.extend(_confidence_lines(normalized))
     lines.extend(_reliability_breakdown(normalized))
     lines.append("")
-    lines.append("## Limitations")
+    lines.append("## Ограничения")
     lines.extend(_limitations(inspection))
     return "\n".join(lines)
 
