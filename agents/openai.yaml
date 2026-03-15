@@ -1,4 +1,4 @@
 interface:
   display_name: "Извлечение визуальной системы / Site Visual Extraction"
   short_description: "RU/EN skill for site-to-Figma token extraction"
-  default_prompt: "Используй / Use $site-visual-system-extractor, чтобы проанализировать сайт или web app и экспортировать Figma-friendly visual system output."
+  default_prompt: "Проанализируй сайт или web app и извлеки Figma-friendly visual system output без копирования контента и бизнес-логики."

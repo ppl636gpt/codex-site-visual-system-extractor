@@ -12,9 +12,6 @@ from pathlib import Path
 SKILL_DIR_NAME = "site-visual-system-extractor"
 ROOT_FILES = [
     "SKILL.md",
-    "README.md",
-    "README.en.md",
-    "README.ru.md",
 ]
 ROOT_DIRS = [
     "agents",

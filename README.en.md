@@ -2,9 +2,18 @@
 
 Production-ready Codex Desktop skill for extracting a reusable visual system from an existing website or web application instead of cloning the full product.
 
+## Verified against OpenAI Codex docs
+
+This skill has been aligned against the official Codex Skills documentation:
+
+- [Codex Skills documentation](https://developers.openai.com/codex/skills/)
+- [Codex documentation hub](https://developers.openai.com/codex/)
+
+According to the official docs, a skill is a directory containing `SKILL.md` plus optional `scripts/`, `references/`, `assets/`, and `agents/openai.yaml`, and Codex can use skills either implicitly from the skill `description` or explicitly when a skill is mentioned in a prompt.
+
 ## Overview
 
-This repository is an installable Codex Skill. The repository root already contains the standard Codex Desktop skill structure: `SKILL.md`, `agents/`, `references/`, `scripts/`, and `assets/`.
+This repository is an installable Codex Skill. The repository root is the skill directory itself and contains the standard Codex skill structure: `SKILL.md`, `agents/`, `references/`, `scripts/`, and `assets/`.
 
 The skill inspects rendered UI instead of relying only on source CSS. It works with hydrated DOM, computed styles, CSS custom properties, theme switches, inline styles, runtime class toggles, responsive behavior, and safe interactive states such as `hover`, `focus`, and `active`.
 
@@ -15,23 +24,30 @@ The result is optimized for Figma-first workflows and is suitable for Tokens Stu
 - Release bundle: [skill.zip](https://github.com/ppl636gpt/codex-site-visual-system-extractor/releases/latest/download/skill.zip)
 - Repository: [ppl636gpt/codex-site-visual-system-extractor](https://github.com/ppl636gpt/codex-site-visual-system-extractor)
 
-After you place the extracted folder into your Codex Desktop skills directory, Codex detects the skill automatically. No special command is required to “start” it.
+To be detected by Codex automatically, the extracted skill folder must live in one of the official scanned locations described in the docs. The most relevant ones are:
+
+- User scope: `~/.agents/skills/site-visual-system-extractor`
+- Repository scope: `<repo>/.agents/skills/site-visual-system-extractor`
+
+After the folder is placed in one of those locations, Codex detects the skill automatically. No separate start command is required.
 
 ## How it works in Codex
 
-- Install the skill into your skills directory.
+- Install the skill into an official skills directory.
 - Keep dependencies available for the bundled Python scripts.
-- Then just describe your task in plain language.
-- Codex will use the skill automatically when the request matches the skill description in `SKILL.md`.
-- If you ever want to force an explicit reference, you can mention the skill name in the prompt, but that is optional rather than required.
+- Then describe your task in plain language.
+- Codex can activate the skill automatically when the request matches the skill description in `SKILL.md`.
+- Explicit skill mention is optional, not required.
 
 ## Install dependencies
 
 ```bash
-cd "$CODEX_HOME/skills/site-visual-system-extractor"
+cd ~/.agents/skills/site-visual-system-extractor
 python3 -m pip install -r scripts/requirements.txt
 python3 -m playwright install chromium
 ```
+
+If you keep the skill in a repository-local `.agents/skills` directory, run the same commands from that installed folder instead.
 
 ## What it extracts
 
